@@ -1,0 +1,220 @@
+{
+  "entities": {
+    "Member": {
+      "title": "Member",
+      "description": "Registered congregation members details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique member identifier" },
+        "name": { "type": "string", "description": "Full name of the member" },
+        "role": { "type": "string", "description": "Role inside the local assembly" },
+        "email": { "type": "string", "format": "email", "description": "Electronic mail address" },
+        "phone": { "type": "string", "description": "Primary phone contact" },
+        "demographic": { "type": "string", "enum": ["Children", "Youth", "Adult", "Men", "Women"], "description": "Congregation age/gender group" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"], "description": "Activity status within parish" },
+        "joinedAt": { "type": "string", "description": "Registration audit logs date" },
+        "notes": { "type": "string", "description": "Additional pastoral/counseling notes" },
+        "avatarUrl": { "type": "string", "description": "Custom avatar URL or gravatar-style icon" },
+        "avatarType": { "type": "string", "enum": ["gravatar", "identicon", "dicebear", "uploaded"], "description": "Avatar generator or upload style" }
+      },
+      "required": ["id", "name", "role", "email", "status"]
+    },
+    "NewComer": {
+      "title": "NewComer",
+      "description": "First-time visitors and follow up records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "firstVisit": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "assignedTo": { "type": "string" },
+        "status": { "type": "string", "enum": ["New", "Contacted", "Attending", "Converted", "Member"] },
+        "followUpNotes": { "type": "string" }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Worship service attendance headcount logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "serviceType": { "type": "string" },
+        "attendanceCount": { "type": "integer" },
+        "newVisitors": { "type": "integer" }
+      },
+      "required": ["id", "date", "serviceType", "attendanceCount"]
+    },
+    "SpecialEvent": {
+      "title": "SpecialEvent",
+      "description": "Church Crusades, Conclaves, Conferences checklist and details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["Crusade", "Retreat", "Conference", "Seminar", "Concert"] },
+        "date": { "type": "string" },
+        "venue": { "type": "string" },
+        "budget": { "type": "integer" },
+        "expectedAttendance": { "type": "integer" },
+        "flyerUrl": { "type": "string" },
+        "notes": { "type": "string" },
+        "salvations": { "type": "integer" }
+      },
+      "required": ["id", "name", "type", "date"]
+    },
+    "VideoLink": {
+      "title": "VideoLink",
+      "description": "Expository sermon recording links or outreach streams",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "category": { "type": "string", "enum": ["Sermon", "Worship", "Outreach", "Seminar"] },
+        "uploadedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "url", "category"]
+    },
+    "SentEmail": {
+      "title": "SentEmail",
+      "description": "Automated email outbox campaigns",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "to": { "type": "string" },
+        "subject": { "type": "string" },
+        "body": { "type": "string" },
+        "sentAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["Sent", "Scheduled", "Draft"] }
+      },
+      "required": ["id", "to", "subject", "body", "sentAt", "status"]
+    },
+    "DevotionalSession": {
+      "title": "DevotionalSession",
+      "description": "Saved devotional studies and active reflection logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "topic": { "type": "string" },
+        "styleLabel": { "type": "string" },
+        "scriptureReading": { "type": "string" },
+        "dailyMeditation": { "type": "string" },
+        "propheticDeclaration": { "type": "string" },
+        "prayerPoints": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "topic", "styleLabel", "scriptureReading", "dailyMeditation", "createdAt"]
+    },
+    "PrayerJournalEntry": {
+      "title": "PrayerJournalEntry",
+      "description": "Pastor or member custom prayer journal entries tracking answered status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "request": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Answered"] },
+        "createdAt": { "type": "string" },
+        "answeredAt": { "type": "string" },
+        "testimony": { "type": "string", "description": "Answered prayer testimony praise report" },
+        "category": { "type": "string", "description": "Prayer request spiritual burden category" },
+        "scriptureRef": { "type": "string", "description": "Claimed scripture promise reference" }
+      },
+      "required": ["id", "userId", "title", "request", "status", "createdAt"]
+    },
+    "ReminderSetting": {
+      "title": "ReminderSetting",
+      "description": "Individual daily prayer reminder notification preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "hour": { "type": "integer" },
+        "minute": { "type": "integer" },
+        "enabled": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "hour", "minute", "enabled"]
+    },
+    "FavoriteScripture": {
+      "title": "FavoriteScripture",
+      "description": "User's favorite scriptures highlighted from devotional studies",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "reference": { "type": "string", "description": "The Bible verse scripture reference" },
+        "savedAt": { "type": "string", "description": "ISO date string when reference was saved" }
+      },
+      "required": ["id", "userId", "reference", "savedAt"]
+    },
+    "ChurchProfile": {
+      "title": "ChurchProfile",
+      "description": "Profile details for different branches and local parishes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique profile identifier" },
+        "name": { "type": "string", "description": "Full name of the parish or branch" },
+        "address": { "type": "string", "description": "Physical location address" },
+        "email": { "type": "string", "format": "email", "description": "Electronic contact mail" },
+        "phone": { "type": "string", "description": "Primary voice or messaging phone number" },
+        "province": { "type": "string", "description": "Provincial or state division" },
+        "country": { "type": "string", "description": "Country of operation" },
+        "bibleVersion": { "type": "string", "description": "Preferred default study Bible version" }
+      },
+      "required": ["id", "name", "address", "email", "phone", "province", "country", "bibleVersion"]
+    }
+  },
+  "firestore": {
+    "members": {
+      "schema": "Member",
+      "description": "Collection of church membership directory records"
+    },
+    "newcomers": {
+      "schema": "NewComer",
+      "description": "Collection of visitor cards and follow-up activities"
+    },
+    "attendance": {
+      "schema": "AttendanceRecord",
+      "description": "Collection of attendance headcount statistics"
+    },
+    "events": {
+      "schema": "SpecialEvent",
+      "description": "Collection of parish campaigns and crusades"
+    },
+    "videos": {
+      "schema": "VideoLink",
+      "description": "Collection of media links and uploaded stream recordings"
+    },
+    "emails": {
+      "schema": "SentEmail",
+      "description": "Collection of sent evangelical mail communications"
+    },
+    "devotions": {
+      "schema": "DevotionalSession",
+      "description": "Saved personal or general devotional and meditation session records"
+    },
+    "journal": {
+      "schema": "PrayerJournalEntry",
+      "description": "Historical prayer diaries and answered petitions"
+    },
+    "reminders": {
+      "schema": "ReminderSetting",
+      "description": "Daily reminders config for users"
+    },
+    "favorites": {
+      "schema": "FavoriteScripture",
+      "description": "User's personal scripture highlights and favorite references"
+    },
+    "profiles": {
+      "schema": "ChurchProfile",
+      "description": "Parish and central church brand profiles"
+    }
+  }
+}
