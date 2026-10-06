@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import { 
   BookOpen, Sparkles, Send, ShieldAlert, Heart, Landmark, RefreshCw, Pencil, Check, 
   Trash2, Plus, Upload, FileText, CheckCircle, Shield, Brain, Lightbulb, Copy, 
-  Loader2, ChevronDown, ChevronUp, Layers, Compass 
+  Loader2, ChevronDown, ChevronUp, Layers, Compass, Highlighter, Bookmark 
 } from "lucide-react";
 import { BibleDoctrine, DeepReasoningInsight } from "../types";
+import VerseHighlighter from "./VerseHighlighter";
 
 interface BibleToolsProps {
+  user?: any;
   triggerToast: (icon: string, message: string) => void;
   preferredVersion: string;
   setPreferredVersion: (v: string) => void;
   isOffline: boolean;
 }
 
-export default function BibleTools({ triggerToast, preferredVersion, setPreferredVersion }: BibleToolsProps) {
-  const [activeSubTab, setActiveSubTab] = useState<"reasoning" | "chat" | "study" | "doctrine" | "haven" | "concordance">("reasoning");
+export default function BibleTools({ user, triggerToast, preferredVersion, setPreferredVersion }: BibleToolsProps) {
+  const [activeSubTab, setActiveSubTab] = useState<"reasoning" | "chat" | "study" | "doctrine" | "haven" | "concordance" | "highlights">("highlights");
 
   // Deep Reasoning Studio states (Powered by Gemini 3.8 Advanced Reasoning Engine)
   const [reasoningQuery, setReasoningQuery] = useState("Divine Sovereignty vs Human Agency in Romans 9-11");
@@ -649,6 +651,7 @@ export default function BibleTools({ triggerToast, preferredVersion, setPreferre
       {/* Sub tabs selectors */}
       <div className="flex flex-wrap gap-1.5 border-b border-[#D4AF37]/25 pb-2">
         {[
+          { id: "highlights", label: "Scripture Highlights & Reader", icon: Highlighter },
           { id: "reasoning", label: "Gemini 3.8 Deep Reasoning Studio", icon: Brain },
           { id: "chat", label: "BibleGPT Conversational Chat", icon: Sparkles },
           { id: "study", label: "Study Planner & Guides", icon: BookOpen },
@@ -675,6 +678,20 @@ export default function BibleTools({ triggerToast, preferredVersion, setPreferre
           </button>
         ))}
       </div>
+
+      {/* SCRIPTURE VERSE HIGHLIGHTER & STUDY NOTEBOOK MODULE */}
+      {activeSubTab === "highlights" && (
+        <VerseHighlighter 
+          user={user} 
+          triggerToast={triggerToast} 
+          preferredVersion={preferredVersion} 
+          onSelectVerseForStudy={(ref, text) => {
+            setStudyTopic(`${ref} Exposition`);
+            setActiveSubTab("study");
+            triggerToast("📖", `Loaded ${ref} into Study Guide Planner!`);
+          }}
+        />
+      )}
 
       {/* 0. GEMINI 3.8 DEEP REASONING & THEOLOGICAL INSIGHTS STUDIO */}
       {activeSubTab === "reasoning" && (
@@ -1668,12 +1685,20 @@ export default function BibleTools({ triggerToast, preferredVersion, setPreferre
               <span className="text-[10px] font-bold text-[#D4AF37] tracking-widest uppercase block">Breathed Scripture of the Day</span>
               <p className="text-xs font-serif-cinzel text-white italic">"{dailyVerse.text}"</p>
               <p className="text-[10px] text-[#D4AF37] font-bold">-{dailyVerse.ref}</p>
-              <button 
-                onClick={handleRefreshDailyVerse}
-                className="mx-auto flex items-center gap-1 bg-[#112055] hover:bg-[#112055]/70 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] py-1 px-2.5 rounded transition"
-              >
-                <RefreshCw className="w-3 h-3" /> Refresh Verse
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                <button 
+                  onClick={handleRefreshDailyVerse}
+                  className="flex items-center gap-1 bg-[#112055] hover:bg-[#112055]/70 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] py-1 px-2.5 rounded transition cursor-pointer"
+                >
+                  <RefreshCw className="w-3 h-3" /> Refresh Verse
+                </button>
+                <button 
+                  onClick={() => setActiveSubTab("highlights")}
+                  className="flex items-center gap-1 bg-[#D4AF37] hover:bg-[#F0C940] text-black font-bold text-[10px] py-1 px-2.5 rounded transition cursor-pointer"
+                >
+                  <Highlighter className="w-3 h-3" /> Highlight in Reader
+                </button>
+              </div>
             </div>
           </div>
 

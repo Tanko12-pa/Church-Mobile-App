@@ -220,3 +220,18 @@ export interface ChurchGrowthMonthData {
   netActiveMembers: number;
   notes?: string;
 }
+
+export interface VerseHighlight {
+  id: string;
+  userId: string;
+  passage: string;
+  book: string;
+  chapter: number;
+  verse: number;
+  verseText: string;
+  color: "gold" | "blue" | "green" | "purple" | "rose" | "amber" | string;
+  colorHex: string;
+  note?: string;
+  version: string;
+  createdAt: string;
+}

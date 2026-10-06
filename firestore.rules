@@ -158,6 +158,23 @@ service cloud.firestore {
         && data.savedAt is string;
     }
 
+    // Verse Highlight validation
+    function isValidVerseHighlight(data) {
+      return data.keys().hasAll(['id', 'userId', 'passage', 'book', 'chapter', 'verse', 'verseText', 'color', 'createdAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId == request.auth.uid
+        && data.passage is string && data.passage.size() <= 256
+        && data.book is string && data.book.size() <= 64
+        && data.chapter is int
+        && data.verse is int
+        && data.verseText is string && data.verseText.size() <= 4096
+        && data.color is string && data.color.size() <= 32
+        && data.createdAt is string
+        && (!data.keys().contains('colorHex') || (data.colorHex is string && data.colorHex.size() <= 32))
+        && (!data.keys().contains('note') || (data.note is string && data.note.size() <= 4096))
+        && (!data.keys().contains('version') || (data.version is string && data.version.size() <= 32));
+    }
+
     // Church Profile validation
     function isValidChurchProfile(data) {
       return data.keys().hasAll(['id', 'name', 'address', 'email', 'phone', 'province', 'country', 'bibleVersion'])
@@ -252,6 +269,15 @@ service cloud.firestore {
       allow create: if isEmailVerified() && isValidId(favoriteId) && isValidFavoriteScripture(incoming());
       allow update: if isEmailVerified() && isValidId(favoriteId) && isValidFavoriteScripture(incoming()) && incoming().userId == existing().userId;
       allow delete: if isEmailVerified() && isValidId(favoriteId) && existing().userId == request.auth.uid;
+    }
+
+    // Verse Highlights collection
+    match /highlights/{highlightId} {
+      allow get: if isEmailVerified() && resource.data.userId == request.auth.uid;
+      allow list: if isEmailVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isEmailVerified() && isValidId(highlightId) && isValidVerseHighlight(incoming());
+      allow update: if isEmailVerified() && isValidId(highlightId) && isValidVerseHighlight(incoming()) && incoming().userId == existing().userId;
+      allow delete: if isEmailVerified() && isValidId(highlightId) && existing().userId == request.auth.uid;
     }
 
     // Church Profiles collection

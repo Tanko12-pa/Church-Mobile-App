@@ -169,6 +169,26 @@
         "bibleVersion": { "type": "string", "description": "Preferred default study Bible version" }
       },
       "required": ["id", "name", "address", "email", "phone", "province", "country", "bibleVersion"]
+    },
+    "VerseHighlight": {
+      "title": "VerseHighlight",
+      "description": "Highlighted Bible verse selections with color coding and study notes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "passage": { "type": "string", "description": "Scripture reference e.g. Romans 8:28" },
+        "book": { "type": "string", "description": "Bible book name" },
+        "chapter": { "type": "integer", "description": "Chapter number" },
+        "verse": { "type": "integer", "description": "Verse number" },
+        "verseText": { "type": "string", "description": "Full verse text content" },
+        "color": { "type": "string", "description": "Color name key e.g. gold, blue, green" },
+        "colorHex": { "type": "string", "description": "Color hex code e.g. #D4AF37" },
+        "note": { "type": "string", "description": "Optional study annotation" },
+        "version": { "type": "string", "description": "Bible translation version" },
+        "createdAt": { "type": "string", "description": "Timestamp of highlight creation" }
+      },
+      "required": ["id", "userId", "passage", "book", "chapter", "verse", "verseText", "color", "createdAt"]
     }
   },
   "firestore": {
@@ -211,6 +231,10 @@
     "favorites": {
       "schema": "FavoriteScripture",
       "description": "User's personal scripture highlights and favorite references"
+    },
+    "highlights": {
+      "schema": "VerseHighlight",
+      "description": "User highlighted Bible verses and study color annotations"
     },
     "profiles": {
       "schema": "ChurchProfile",

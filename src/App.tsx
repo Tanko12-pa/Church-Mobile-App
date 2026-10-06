@@ -1389,6 +1389,7 @@ export default function App() {
           {activeTab === "bible" && (
             <div className="animate-fade-in">
               <BibleTools 
+                user={user}
                 triggerToast={triggerToast} 
                 preferredVersion={preferredVersion} 
                 setPreferredVersion={setPreferredVersion}
